@@ -43,7 +43,6 @@ FILE *parseCommandLine(int argc, char **argv, int *bits) {
  **/
 void printDataAsHex(unsigned char *data, size_t size) {
   for(size_t i = 0; i < size; i++) {
-      //printf("In For Loop, i = %li, data[i] = %c", i, data[i]);
 
 		if(i % 2 == 0) {
 			printf(" ");
@@ -52,12 +51,11 @@ void printDataAsHex(unsigned char *data, size_t size) {
       printf("%02x", data[i]);
   }
 
-  unsigned int padding = 41 - (2 * size + (size/2.0 + 0.5));
+  unsigned int padding = 40 - (int)(2 * size + (size/2.0 + 0.5));
 
-   for(unsigned int i = 0; i < padding; i++) {
+   for(int i = 0; i < padding; i++) {
       printf(" ");
    }	
-
 }
 
 /**
@@ -77,8 +75,6 @@ void printDataAsChars(unsigned char *data, size_t size) {
 			else {
 				printf("%c", data[i]);
 			}
-      
-			
     }
 }
 
@@ -97,6 +93,31 @@ void readAndPrintInputAsHex(FILE *input) {
   }
 }
 
+void printDataAsBits(unsigned char *data, size_t size) {
+  for(size_t i = 0; i < size; i++) {
+
+		printf(" ");
+
+		int binary[8];
+		int currentChar = data[i];
+
+		for(int i = 7; i >= 0; i--) {
+			binary[i] = currentChar%2;
+			currentChar /= 2;
+		}
+
+		for(int i = 0; i < 8; i++) {
+			printf("%i", binary[i]);
+		}	
+	}
+
+	unsigned int padding = 54 - (9 * size);
+
+  for(int i = 0; i < padding; i++) {
+    printf(" ");
+  }
+}
+
 /**
  * Bits output for xxd.
  *
@@ -105,7 +126,18 @@ void readAndPrintInputAsHex(FILE *input) {
  * input: input stream
  **/
 void readAndPrintInputAsBits(FILE *input) {
-  printf("TODO 3: readAndPrintInputAsBits\n");
+  unsigned char data[6];
+  int numBytesRead = fread(data, 1, 6, input);
+  unsigned int offset = 0;
+  while (numBytesRead != 0) {
+    printf("%08x:", offset);
+    offset += numBytesRead;
+    printDataAsBits(data, numBytesRead);
+    printf("  ");
+    printDataAsChars(data, numBytesRead);
+    printf("\n");
+    numBytesRead = fread(data, 1, 16, input);
+  }
 }
 
 int main(int argc, char **argv) {

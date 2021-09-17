@@ -1,2 +1,2 @@
 language = "c"
-run = "gcc -Wall -g main.c -o myxxd \n ./myxxd"
+run = "gcc -Wall -g main.c -o myxxd \n ./myxxd -b"
