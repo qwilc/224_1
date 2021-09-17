@@ -42,9 +42,9 @@ FILE *parseCommandLine(int argc, char **argv, int *bits) {
  * size: the size of the array
  **/
 void printDataAsHex(unsigned char *data, size_t size) {
-  for(size_t i = 0; i < size - 1; i+=2) {
+  for(size_t i = 0; i < size; i++) {
       //printf("In For Loop, i = %li, data[i] = %c", i, data[i]);
-      printf("%x%x ", data[i], data[i+1]);
+      printf("%02x", data[i]);
   }
 
   unsigned int padding = 40 - (2.5*size);
