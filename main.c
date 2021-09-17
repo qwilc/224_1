@@ -44,10 +44,15 @@ FILE *parseCommandLine(int argc, char **argv, int *bits) {
 void printDataAsHex(unsigned char *data, size_t size) {
   for(size_t i = 0; i < size; i++) {
       //printf("In For Loop, i = %li, data[i] = %c", i, data[i]);
+
+		if(i % 2 == 0) {
+			printf(" ");
+		}
+
       printf("%02x", data[i]);
   }
 
-  unsigned int padding = 40 - (2.5*size);
+  unsigned int padding = 41 - (2 * size + (size/2.0 + 0.5));
 
    for(unsigned int i = 0; i < padding; i++) {
       printf(" ");
@@ -65,7 +70,15 @@ void printDataAsHex(unsigned char *data, size_t size) {
  **/
 void printDataAsChars(unsigned char *data, size_t size) {
     for(size_t i = 0; i < size; i++) {
-        printf("%c", data[i]);
+
+			if(data[i] < 32 || data[i] > 126) {
+				printf(".");
+			}
+			else {
+				printf("%c", data[i]);
+			}
+      
+			
     }
 }
 
@@ -74,7 +87,7 @@ void readAndPrintInputAsHex(FILE *input) {
   int numBytesRead = fread(data, 1, 16, input);
   unsigned int offset = 0;
   while (numBytesRead != 0) {
-    printf("%08x: ", offset);
+    printf("%08x:", offset);
     offset += numBytesRead;
     printDataAsHex(data, numBytesRead);
     printf("  ");
