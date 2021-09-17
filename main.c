@@ -43,9 +43,16 @@ FILE *parseCommandLine(int argc, char **argv, int *bits) {
  **/
 void printDataAsHex(unsigned char *data, size_t size) {
   for(size_t i = 0; i < size - 1; i+=2) {
-      printf("In For Loop, i = %i, data[i] = %c", i, data[i]);
+      //printf("In For Loop, i = %li, data[i] = %c", i, data[i]);
       printf("%x%x ", data[i], data[i+1]);
   }
+
+  unsigned int padding = 40 - (2.5*size);
+
+   for(unsigned int i = 0; i < padding; i++) {
+      printf(" ");
+   }	
+
 }
 
 /**
