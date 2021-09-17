@@ -42,8 +42,6 @@ FILE *parseCommandLine(int argc, char **argv, int *bits) {
  * size: the size of the array
  **/
 void printDataAsHex(unsigned char *data, size_t size) {
-  printf("TODO 1: printDataAsHex (2)");
-
   for(size_t i = 0; i < size - 1; i+=2) {
       printf("%x%x ", data[i], data[i+1]);
   }
@@ -58,10 +56,8 @@ void printDataAsHex(unsigned char *data, size_t size) {
  * size: the size of the array
  **/
 void printDataAsChars(unsigned char *data, size_t size) {
-  printf("TODO 2: printDataAsChars (3)");
-
     for(size_t i = 0; i < size; i++) {
-        printf("%x", data[i]);
+        printf("%c", data[i]);
     }
 }
 
