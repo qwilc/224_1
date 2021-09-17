@@ -136,7 +136,7 @@ void readAndPrintInputAsBits(FILE *input) {
     printf("  ");
     printDataAsChars(data, numBytesRead);
     printf("\n");
-    numBytesRead = fread(data, 1, 16, input);
+    numBytesRead = fread(data, 1, 6, input);
   }
 }
 
