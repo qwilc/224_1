@@ -18,19 +18,20 @@
  * returns the input file pointer (FILE*)
  **/
 FILE *parseCommandLine(int argc, char **argv, int *bits) {
-  if (argc > 2) {
-    printf("Usage: %s [-b|-bits]\n", argv[0]);
-    exit(BAD_NUMBER_ARGS);
-  }
+    if (argc > 2) {
+        printf("Usage: %s [-b|-bits]\n", argv[0]);
+        exit(BAD_NUMBER_ARGS);
+    }
 
-  if (argc == 2 &&
-      (strcmp(argv[1], "-b") == 0 || strcmp(argv[1], "-bits") == 0)) {
-    *bits = TRUE;
-  } else {
-    *bits = FALSE;
-  }
+    if (argc == 2 &&
+        (strcmp(argv[1], "-b") == 0 || strcmp(argv[1], "-bits") == 0)) {
+        *bits = TRUE;
+    }
+    else {
+        *bits = FALSE;
+    }
 
-  return stdin;
+    return stdin;
 }
 
 /**
@@ -42,19 +43,18 @@ FILE *parseCommandLine(int argc, char **argv, int *bits) {
  * size: the size of the array
  **/
 void printDataAsHex(unsigned char *data, size_t size) {
-  for(size_t i = 0; i < size; i++) {
-    if(i % 2 == 0) {
+    for(size_t i = 0; i < size; i++) {
+        if(i % 2 == 0) {
+            printf(" ");
+        }
+        printf("%02x", data[i]);
+     }
+
+    unsigned int padding = 40 - (int)(2 * size + (size/2.0 + 0.5));
+
+    for(int i = 0; i < padding; i++) {
         printf(" ");
     }
-
-    printf("%02x", data[i]);
-  }
-
-  unsigned int padding = 40 - (int)(2 * size + (size/2.0 + 0.5));
-
-  for(int i = 0; i < padding; i++) {
-      printf(" ");
-   }	
 }
 
 /**
@@ -77,43 +77,42 @@ void printDataAsChars(unsigned char *data, size_t size) {
 }
 
 void readAndPrintInputAsHex(FILE *input) {
-  unsigned char data[16];
-  int numBytesRead = fread(data, 1, 16, input);
-  unsigned int offset = 0;
-  while (numBytesRead != 0) {
-    printf("%08x:", offset);
-    offset += numBytesRead;
-    printDataAsHex(data, numBytesRead);
-    printf("  ");
-    printDataAsChars(data, numBytesRead);
-    printf("\n");
-    numBytesRead = fread(data, 1, 16, input);
-  }
+    unsigned char data[16];
+    int numBytesRead = fread(data, 1, 16, input);
+    unsigned int offset = 0;
+    while (numBytesRead != 0) {
+        printf("%08x:", offset);
+        offset += numBytesRead;
+        printDataAsHex(data, numBytesRead);
+        printf("  ");
+        printDataAsChars(data, numBytesRead);
+        printf("\n");
+        numBytesRead = fread(data, 1, 16, input);
+    }
 }
 
 void printDataAsBits(unsigned char *data, size_t size) {
-  for(size_t i = 0; i < size; i++) {
+    for(size_t i = 0; i < size; i++) {
+        int binary[8];
+        int currentChar = data[i];
 
-		printf(" ");
+        printf(" ");
 
-		int binary[8];
-		int currentChar = data[i];
+        for(int i = 7; i >= 0; i--) {
+            binary[i] = currentChar%2;
+            currentChar /= 2;
+        }
 
-		for(int i = 7; i >= 0; i--) {
-			binary[i] = currentChar%2;
-			currentChar /= 2;
-		}
+        for(int i = 0; i < 8; i++) {
+            printf("%i", binary[i]);
+        }
+    }
 
-		for(int i = 0; i < 8; i++) {
-			printf("%i", binary[i]);
-		}	
-	}
+    unsigned int padding = 54 - (9 * size);
 
-	unsigned int padding = 54 - (9 * size);
-
-  for(int i = 0; i < padding; i++) {
-    printf(" ");
-  }
+    for(int i = 0; i < padding; i++) {
+        printf(" ");
+    }
 }
 
 /**
@@ -124,28 +123,29 @@ void printDataAsBits(unsigned char *data, size_t size) {
  * input: input stream
  **/
 void readAndPrintInputAsBits(FILE *input) {
-  unsigned char data[6];
-  int numBytesRead = fread(data, 1, 6, input);
-  unsigned int offset = 0;
-  while (numBytesRead != 0) {
-    printf("%08x:", offset);
-    offset += numBytesRead;
-    printDataAsBits(data, numBytesRead);
-    printf("  ");
-    printDataAsChars(data, numBytesRead);
-    printf("\n");
-    numBytesRead = fread(data, 1, 6, input);
-  }
+    unsigned char data[6];
+    int numBytesRead = fread(data, 1, 6, input);
+    unsigned int offset = 0;
+    while (numBytesRead != 0) {
+        printf("%08x:", offset);
+        offset += numBytesRead;
+        printDataAsBits(data, numBytesRead);
+        printf("  ");
+        printDataAsChars(data, numBytesRead);
+        printf("\n");
+        numBytesRead = fread(data, 1, 6, input);
+    }
 }
 
 int main(int argc, char **argv) {
-  int bits = FALSE;
-  FILE *input = parseCommandLine(argc, argv, &bits);
+    int bits = FALSE;
+    FILE *input = parseCommandLine(argc, argv, &bits);
 
-  if (bits == FALSE) {
-    readAndPrintInputAsHex(input);
-  } else {
-    readAndPrintInputAsBits(input);
-  }
-  return 0;
+    if (bits == FALSE) {
+        readAndPrintInputAsHex(input);
+    }
+    else {
+        readAndPrintInputAsBits(input);
+    }
+    return 0;
 }
